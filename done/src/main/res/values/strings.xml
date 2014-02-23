@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">done</string>
+
+    <string name="action_create_task_list">Create task list</string>
+    <string name="action_delete_task_list">Delete task list</string>
+    <string name="action_sign_out">Sign out</string>
+    <string name="action_help">Help</string>
+
+    <string name="action_save_task">Save</string>
+    <string name="action_add_task">Add</string>
+    <string name="action_delete_task">Delete</string>
+
+</resources>
