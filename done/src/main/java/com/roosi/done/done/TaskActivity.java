@@ -89,6 +89,14 @@ public class TaskActivity extends Activity {
                 }
             });
 
+            rootView.findViewById(R.id.buttonDone).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getActivity().getActionBar().setBackgroundDrawable(
+                            new ColorDrawable(getResources().getColor(R.color.status_completed)));
+                }
+            });
+
             return rootView;
         }
     }
