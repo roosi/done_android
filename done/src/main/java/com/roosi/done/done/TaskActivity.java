@@ -7,6 +7,8 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +17,7 @@ import android.view.ViewGroup;
 import android.os.Build;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -82,6 +85,7 @@ public class TaskActivity extends Activity {
         private DatePicker mDatePicker;
         private Button mButtonDate;
         private View mButtonDone;
+        private EditText mEditTextTitle;
 
         public PlaceholderFragment() {
         }
@@ -90,6 +94,23 @@ public class TaskActivity extends Activity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_task, container, false);
+
+            mEditTextTitle = (EditText)rootView.findViewById(R.id.editTextTitle);
+            mEditTextTitle.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                    getActivity().getActionBar().setTitle(charSequence);
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                }
+            });
+
             mDatePicker = (DatePicker)rootView.findViewById(R.id.datePicker);
 
             mButtonDate = (Button)rootView.findViewById(R.id.buttonDate);
