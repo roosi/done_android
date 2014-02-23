@@ -28,7 +28,7 @@ public class TaskActivity extends Activity {
         actionBar.setIcon(android.R.color.transparent);
 
         actionBar.setBackgroundDrawable(
-                new ColorDrawable(getResources().getColor(R.color.status_needs_action)));
+                new ColorDrawable(getResources().getColor(R.color.status_due_closing)));
         actionBar.setTitle(title);
 
         if (savedInstanceState == null) {
