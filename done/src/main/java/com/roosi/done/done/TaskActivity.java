@@ -13,6 +13,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
+import android.widget.Button;
+import android.widget.DatePicker;
+
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class TaskActivity extends Activity {
 
@@ -72,6 +79,10 @@ public class TaskActivity extends Activity {
      */
     public static class PlaceholderFragment extends Fragment {
 
+        private DatePicker mDatePicker;
+        private Button mButtonDate;
+        private View mButtonDone;
+
         public PlaceholderFragment() {
         }
 
@@ -79,21 +90,36 @@ public class TaskActivity extends Activity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_task, container, false);
-            final View datePicker = rootView.findViewById(R.id.datePicker);
+            mDatePicker = (DatePicker)rootView.findViewById(R.id.datePicker);
 
-            rootView.findViewById(R.id.buttonDate).setOnClickListener(new View.OnClickListener() {
+            mButtonDate = (Button)rootView.findViewById(R.id.buttonDate);
+            mButtonDate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    datePicker.setVisibility(datePicker.getVisibility() == View.GONE ?
+                    mDatePicker.setVisibility(mDatePicker.getVisibility() == View.GONE ?
                             View.VISIBLE : View.GONE);
                 }
             });
 
-            rootView.findViewById(R.id.buttonDone).setOnClickListener(new View.OnClickListener() {
+            mButtonDone = rootView.findViewById(R.id.buttonDone);
+            mButtonDone.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     getActivity().getActionBar().setBackgroundDrawable(
                             new ColorDrawable(getResources().getColor(R.color.status_completed)));
+                }
+            });
+
+            Calendar c = Calendar.getInstance();
+
+            final DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
+            mButtonDate.setText(df.format(c.getTime()));
+
+            mDatePicker.init(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE),
+                    new DatePicker.OnDateChangedListener() {
+                @Override
+                public void onDateChanged(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
+                    mButtonDate.setText(df.format(new Date(year, monthOfYear, dayOfMonth)));
                 }
             });
 
