@@ -18,6 +18,7 @@ import android.os.Build;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -43,7 +44,7 @@ public class TaskActivity extends Activity {
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
+                    .add(R.id.container, new PlaceholderFragment(title))
                     .commit();
         }
     }
@@ -54,6 +55,9 @@ public class TaskActivity extends Activity {
         
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.task, menu);
+
+        //menu.findItem(R.id.action_save_task).setEnabled(false);
+
         return true;
     }
 
@@ -65,6 +69,7 @@ public class TaskActivity extends Activity {
         int id = item.getItemId();
         if (id == R.id.action_save_task)
         {
+            Toast.makeText(this, R.string.toast_task_saved, Toast.LENGTH_SHORT).show();
             finish();
             return true;
         }
@@ -82,12 +87,14 @@ public class TaskActivity extends Activity {
      */
     public static class PlaceholderFragment extends Fragment {
 
+        private String mTitle;
         private DatePicker mDatePicker;
         private Button mButtonDate;
         private View mButtonDone;
         private EditText mEditTextTitle;
 
-        public PlaceholderFragment() {
+        public PlaceholderFragment(String title) {
+            mTitle = title;
         }
 
         @Override
@@ -96,6 +103,7 @@ public class TaskActivity extends Activity {
             View rootView = inflater.inflate(R.layout.fragment_task, container, false);
 
             mEditTextTitle = (EditText)rootView.findViewById(R.id.editTextTitle);
+            mEditTextTitle.setText(mTitle);
             mEditTextTitle.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {

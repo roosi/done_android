@@ -12,5 +12,6 @@
     <string name="action_add_task">Add</string>
     <string name="action_delete_task">Delete</string>
     <string name="button_done">DONE</string>
+    <string name="toast_task_saved">Task saved</string>
 
 </resources>

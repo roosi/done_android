@@ -13,9 +13,12 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends Activity implements ActionBar.OnNavigationListener {
 
@@ -127,6 +130,7 @@ public class MainActivity extends Activity implements ActionBar.OnNavigationList
             return fragment;
         }
 
+        private View progressBar;
         private AbsListView taskListView;
         private List<String> tasks;
 
@@ -172,6 +176,20 @@ public class MainActivity extends Activity implements ActionBar.OnNavigationList
                     startActivity(intent);
                 }
             });
+
+            progressBar = rootView.findViewById(R.id.progressBar);
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressBar.setVisibility(View.GONE);
+                        }
+                    });
+                }
+            }, 2000);
 
             return rootView;
         }
