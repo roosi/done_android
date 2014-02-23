@@ -3,6 +3,9 @@ package com.roosi.done.done;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,8 +25,10 @@ public class TaskActivity extends Activity {
 
         final ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(title);
+        actionBar.setIcon(android.R.color.transparent);
 
+        actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.StatusNeedsAction)));
+        actionBar.setTitle(title);
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()

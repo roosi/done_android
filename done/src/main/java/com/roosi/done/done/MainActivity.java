@@ -158,8 +158,8 @@ public class MainActivity extends Activity implements ActionBar.OnNavigationList
             tasks.add("Task 13");
 
             ArrayAdapter<String> tasksAdapter = new ArrayAdapter<String>(getActivity(),
-                    android.R.layout.simple_list_item_1,
-                    android.R.id.text1,
+                    R.layout.list_item_task,
+                    R.id.textViewTitle,
                     tasks);
 
             taskListView.setAdapter(tasksAdapter);
