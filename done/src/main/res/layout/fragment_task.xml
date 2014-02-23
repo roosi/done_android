@@ -24,7 +24,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="12.12.2012"
+        android:textSize="18sp"
         android:id="@+id/buttonDate"
+        style="@android:style/Widget.Holo.Button.Borderless.Small"
+        android:textColor="@color/status_needs_action"
         android:layout_below="@id/editTextTitle"
         android:layout_alignParentLeft="true"/>
 
@@ -46,11 +49,12 @@
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 
-
     <Button
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="36dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:text="done"/>
+        android:background="@drawable/btn_priority"
+        android:textColor="@android:color/white"
+        android:text="DONE"/>
 </RelativeLayout>

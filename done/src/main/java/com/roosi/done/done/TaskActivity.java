@@ -27,7 +27,8 @@ public class TaskActivity extends Activity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setIcon(android.R.color.transparent);
 
-        actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.StatusNeedsAction)));
+        actionBar.setBackgroundDrawable(
+                new ColorDrawable(getResources().getColor(R.color.status_needs_action)));
         actionBar.setTitle(title);
 
         if (savedInstanceState == null) {
