@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.roosi.done.done" >
+    package="com.roosi.done.done">
 
     <application
         android:allowBackup="true"
@@ -18,7 +18,15 @@
         </activity>
         <activity
             android:name="com.roosi.done.done.TaskActivity"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName="com.roosi.done.done.MainActivity" >
+        </activity>
+        <activity
+            android:name="com.roosi.done.done.HelpActivity"
+            android:label="@string/title_activity_help"
+            android:parentActivityName="com.roosi.done.done.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="MainActivity" />
         </activity>
     </application>
 

@@ -88,6 +88,10 @@ public class MainActivity extends Activity implements ActionBar.OnNavigationList
             startActivity(intent);
             return true;
         }
+        else if (id == R.id.action_help)
+        {
+            startActivity(new Intent(this, HelpActivity.class));
+        }
         return super.onOptionsItemSelected(item);
     }
 
