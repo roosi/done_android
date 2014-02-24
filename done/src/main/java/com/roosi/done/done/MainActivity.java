@@ -45,7 +45,8 @@ public class MainActivity extends Activity implements ActionBar.OnNavigationList
 
     private static final String PREF_ACCOUNT_NAME = "accountName";
 
-    GoogleAccountCredential mCredential;
+    private GoogleAccountCredential mCredential;
+    private ArrayAdapter<String> mTaskListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +58,17 @@ public class MainActivity extends Activity implements ActionBar.OnNavigationList
         //actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+
+        mTaskListAdapter = new ArrayAdapter<String>(
+                getActionBar().getThemedContext(),
+                android.R.layout.simple_list_item_1,
+                android.R.id.text1);
+
+        // Set up the dropdown list navigation in the action bar.
+        getActionBar().setListNavigationCallbacks(
+                // Specify a SpinnerAdapter to populate the dropdown list.
+                mTaskListAdapter,
+                this);
 
         // Google Accounts
         mCredential =
@@ -144,19 +156,10 @@ public class MainActivity extends Activity implements ActionBar.OnNavigationList
 
     private void loadTaskList()
     {
-        // Set up the dropdown list navigation in the action bar.
-        getActionBar().setListNavigationCallbacks(
-                // Specify a SpinnerAdapter to populate the dropdown list.
-                new ArrayAdapter<String>(
-                        getActionBar().getThemedContext(),
-                        android.R.layout.simple_list_item_1,
-                        android.R.id.text1,
-                        new String[]{
-                                "Task list 1",
-                                "Task list 2",
-                                "Task list 3",
-                        }),
-                this);
+        mTaskListAdapter.addAll(new String[]{
+                "Task list 1",
+                "Task list 2",
+                "Task list 3"});
     }
 
     @Override
@@ -219,7 +222,7 @@ public class MainActivity extends Activity implements ActionBar.OnNavigationList
         // When the given dropdown item is selected, show its contents in the
         // container view.
         getFragmentManager().beginTransaction()
-                .replace(R.id.container, TasksFragment.newInstance(position + 1))
+                .replace(R.id.container, TasksFragment.newInstance(mCredential, position + 1))
                 .commit();
         return true;
     }

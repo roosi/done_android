@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/pref_header_about">
+        <Preference
+            android:title="@string/pref_title_licenses"
+            android:summary="@string/pref_summary_licenses"/>
+
+        <Preference
+            android:key="version"
+            android:title="@string/app_name"
+            android:summary="Version: 0.1.0"
+            android:icon="@drawable/ic_launcher"
+            android:selectable="false"/>
+    </PreferenceCategory>
+</PreferenceScreen>
