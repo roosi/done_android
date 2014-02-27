@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MainActivity extends Activity implements ActionBar.OnNavigationListener {
+public class MainActivity extends Activity implements ActionBar.OnNavigationListener, TasksFragment.OnLoadingListener {
 
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 0;
 
@@ -62,6 +62,7 @@ public class MainActivity extends Activity implements ActionBar.OnNavigationList
     final HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
     final JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
     private com.google.api.services.tasks.Tasks mService;
+    private View mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +95,8 @@ public class MainActivity extends Activity implements ActionBar.OnNavigationList
         mService =
                 new com.google.api.services.tasks.Tasks.Builder(httpTransport, jsonFactory, mCredential)
                         .setApplicationName("done").build();
+
+        mProgressBar = findViewById(R.id.progressBar);
     }
 
     @Override
@@ -175,6 +178,10 @@ public class MainActivity extends Activity implements ActionBar.OnNavigationList
 
     private void loadTaskList()
     {
+        if (mTaskListAdapter.getCount() > 0)
+            return;
+
+        mProgressBar.setVisibility(View.VISIBLE);
         new AsyncTask<Void, Void, TaskLists>()
         {
             @Override
@@ -200,6 +207,7 @@ public class MainActivity extends Activity implements ActionBar.OnNavigationList
             @Override
             protected void onPostExecute(TaskLists taskLists) {
                 super.onPostExecute(taskLists);
+                mProgressBar.setVisibility(View.GONE);
                 mTaskListAdapter.clear();
                 if(taskLists != null) {
                     mTaskListAdapter.addAll(taskLists.getItems());
@@ -272,5 +280,15 @@ public class MainActivity extends Activity implements ActionBar.OnNavigationList
                 .replace(R.id.container, TasksFragment.newInstance(taskList, mService))
                 .commit();
         return true;
+    }
+
+    @Override
+    public void onLoadingStarted() {
+        mProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onLoadingStopped() {
+        mProgressBar.setVisibility(View.GONE);
     }
 }
