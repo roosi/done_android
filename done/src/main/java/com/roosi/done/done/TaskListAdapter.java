@@ -8,6 +8,9 @@ import android.widget.TextView;
 
 import com.google.api.services.tasks.model.TaskList;
 
+import java.text.DateFormat;
+import java.util.Locale;
+
 /**
  * Created by jtn on 26/02/14.
  */

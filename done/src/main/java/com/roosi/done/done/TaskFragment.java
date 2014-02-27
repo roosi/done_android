@@ -17,18 +17,26 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
+import com.google.api.client.util.DateTime;
+import com.google.api.services.tasks.model.Task;
+
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
 public class TaskFragment extends BaseFragment {
 
+    final DateFormat UiFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
+    final SimpleDateFormat Rfc3339Format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
     private String mTitle;
     private DatePicker mDatePicker;
     private Button mButtonDate;
     private View mButtonDone;
     private EditText mEditTextTitle;
+    private EditText mEditTextNotes;
 
     public TaskFragment(String title) {
         mTitle = title;
@@ -61,6 +69,8 @@ public class TaskFragment extends BaseFragment {
             }
         });
 
+        mEditTextNotes = (EditText)rootView.findViewById(R.id.editTextNotes);
+
         mDatePicker = (DatePicker)rootView.findViewById(R.id.datePicker);
 
         mButtonDate = (Button)rootView.findViewById(R.id.buttonDate);
@@ -83,17 +93,36 @@ public class TaskFragment extends BaseFragment {
 
         Calendar c = Calendar.getInstance();
 
-        final DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
-        mButtonDate.setText(df.format(c.getTime()));
+        mButtonDate.setText(UiFormat.format(c.getTime()));
 
         mDatePicker.init(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE),
                 new DatePicker.OnDateChangedListener() {
                     @Override
                     public void onDateChanged(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
-                        mButtonDate.setText(df.format(new Date(year, monthOfYear, dayOfMonth)));
+                        mButtonDate.setText(UiFormat.format(new Date(year, monthOfYear, dayOfMonth)));
                     }
                 });
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Task task = getSelectedTask();
+
+        try {
+            Date dueDate = Rfc3339Format.parse(task.getDue().toStringRfc3339());
+
+            Calendar c = Calendar.getInstance();
+            c.setTime(dueDate);
+            mDatePicker.updateDate(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+        }
+
+        mEditTextNotes.setText(task.getNotes());
+
     }
 }
