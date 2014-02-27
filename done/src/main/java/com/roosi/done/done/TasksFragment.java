@@ -34,12 +34,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class TasksFragment extends Fragment {
-
-    public interface OnLoadingListener {
-        public void onLoadingStarted();
-        public void onLoadingStopped();
-    }
+public class TasksFragment extends BaseFragment {
 
     public static TasksFragment newInstance(TaskList taskList, com.google.api.services.tasks.Tasks service) {
         TasksFragment fragment = new TasksFragment(taskList, service);
@@ -49,24 +44,12 @@ public class TasksFragment extends Fragment {
     private TasksAdapter mTasksAdapter;
     private AbsListView taskListView;
     private TaskList mTaskList;
-    private OnLoadingListener mListener;
 
     private com.google.api.services.tasks.Tasks mService;
 
     public TasksFragment(TaskList taskList, com.google.api.services.tasks.Tasks service) {
         mTaskList = taskList;
         mService = service;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnLoadingListener)activity;
-        }
-        catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnLoadingListener");
-        }
     }
 
     @Override
@@ -98,7 +81,7 @@ public class TasksFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        mListener.onLoadingStarted();;
+        super.onLoadingStarted();
 
         new AsyncTask<Void, Void, Tasks>()
         {
@@ -120,7 +103,7 @@ public class TasksFragment extends Fragment {
             @Override
             protected void onPostExecute(Tasks tasks) {
                 super.onPostExecute(tasks);
-                mListener.onLoadingStopped();
+                TasksFragment.super.onLoadingStopped();
                 mTasksAdapter.clear();
                 if(tasks != null) {
                     mTasksAdapter.addAll(tasks.getItems());
