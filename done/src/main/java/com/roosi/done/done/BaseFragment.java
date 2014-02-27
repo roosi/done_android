@@ -13,13 +13,19 @@ public class BaseFragment extends Fragment {
         public void onLoadingStopped();
     }
 
+    public interface OnErrorLister {
+        public void onError(Exception e);
+    }
+
     private OnLoadingListener mListener;
+    private OnErrorLister mErrorListener;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
             mListener = (OnLoadingListener)activity;
+            mErrorListener = (OnErrorLister)activity;
         }
         catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnLoadingListener");
@@ -32,5 +38,15 @@ public class BaseFragment extends Fragment {
 
     protected void onLoadingStopped() {
         mListener.onLoadingStopped();
+    }
+
+    protected void onError(final Exception e)
+    {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mErrorListener.onError(e);
+            }
+        });
     }
 }

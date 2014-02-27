@@ -2,6 +2,7 @@ package com.roosi.done.done;
 
 import android.app.Activity;
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -25,7 +26,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class TaskActivity extends Activity {
+public class TaskActivity extends Activity implements
+        BaseFragment.OnLoadingListener, BaseFragment.OnErrorLister{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,5 +77,24 @@ public class TaskActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onError(Exception e) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(e.getLocalizedMessage())
+                .setTitle("Error");
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    @Override
+    public void onLoadingStarted() {
+
+    }
+
+    @Override
+    public void onLoadingStopped() {
+
     }
 }

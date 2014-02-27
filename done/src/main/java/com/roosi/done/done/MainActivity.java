@@ -3,6 +3,7 @@ package com.roosi.done.done;
 import android.accounts.AccountManager;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
@@ -41,7 +42,8 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MainActivity extends Activity implements ActionBar.OnNavigationListener, TasksFragment.OnLoadingListener {
+public class MainActivity extends Activity implements ActionBar.OnNavigationListener,
+        BaseFragment.OnLoadingListener, BaseFragment.OnErrorLister {
 
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 0;
 
@@ -191,15 +193,13 @@ public class MainActivity extends Activity implements ActionBar.OnNavigationList
                     taskLists = mService.tasklists().list().execute();
                 } catch (UserRecoverableAuthIOException e) {
                     startActivityForResult(e.getIntent(), REQUEST_AUTHORIZATION);
-                } catch (IOException e) {
-                    final String message = e.getLocalizedMessage();
+                } catch (final IOException e) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                            onError(e);
                         }
                     });
-
                 }
                 return taskLists;
             }
@@ -290,5 +290,14 @@ public class MainActivity extends Activity implements ActionBar.OnNavigationList
     @Override
     public void onLoadingStopped() {
         mProgressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onError(Exception e) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(e.getLocalizedMessage())
+                .setTitle("Error");
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

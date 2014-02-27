@@ -22,7 +22,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class TaskFragment extends Fragment {
+public class TaskFragment extends BaseFragment {
 
     private String mTitle;
     private DatePicker mDatePicker;

@@ -93,9 +93,7 @@ public class TasksFragment extends BaseFragment {
                 } catch (UserRecoverableAuthIOException e) {
                     //startActivityForResult(e.getIntent(), REQUEST_AUTHORIZATION);
                 } catch (IOException e) {
-                    final String message = e.getLocalizedMessage();
-
-
+                    onError(e);
                 }
                 return tasks;
             }
