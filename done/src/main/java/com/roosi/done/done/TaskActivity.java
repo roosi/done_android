@@ -21,6 +21,8 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.internal.ge;
+
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -34,7 +36,7 @@ public class TaskActivity extends Activity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
 
-        String title = getIntent().getStringExtra("title");
+        String title = ((DoneApplication)getApplication()).getSelectedTask().getTitle();
 
         final ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);

@@ -65,9 +65,8 @@ public class TasksFragment extends BaseFragment {
         taskListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(getActivity(), TaskActivity.class);
-                intent.putExtra("title", mTasksAdapter.getItem(i).getTitle());
-                startActivity(intent);
+                setSelectedTask(mTasksAdapter.getItem(i));
+                startActivity(new Intent(getActivity(), TaskActivity.class));
             }
         });
 

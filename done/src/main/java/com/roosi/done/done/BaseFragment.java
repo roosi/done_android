@@ -3,6 +3,8 @@ package com.roosi.done.done;
 import android.app.Activity;
 import android.app.Fragment;
 
+import com.google.api.services.tasks.model.Task;
+
 /**
  * Created by jtn on 27/02/14.
  */
@@ -58,5 +60,13 @@ public class BaseFragment extends Fragment {
 
     protected com.google.api.services.tasks.Tasks getService() {
         return getApplication().getService();
+    }
+
+    protected Task getSelectedTask() {
+        return getApplication().getSelectedTask();
+    }
+
+    protected void setSelectedTask(Task task) {
+        getApplication().setSelectedTask(task);
     }
 }
