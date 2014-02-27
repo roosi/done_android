@@ -8,6 +8,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,10 +21,20 @@ import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.tasks.TasksScopes;
+import com.google.api.services.tasks.model.Task;
+import com.google.api.services.tasks.model.TaskList;
+import com.google.api.services.tasks.model.TaskLists;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -46,7 +57,11 @@ public class MainActivity extends Activity implements ActionBar.OnNavigationList
     private static final String PREF_ACCOUNT_NAME = "accountName";
 
     private GoogleAccountCredential mCredential;
-    private ArrayAdapter<String> mTaskListAdapter;
+    private TaskListAdapter mTaskListAdapter;
+
+    final HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
+    final JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
+    private com.google.api.services.tasks.Tasks mService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +74,7 @@ public class MainActivity extends Activity implements ActionBar.OnNavigationList
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
-        mTaskListAdapter = new ArrayAdapter<String>(
+        mTaskListAdapter = new TaskListAdapter(
                 getActionBar().getThemedContext(),
                 android.R.layout.simple_list_item_1,
                 android.R.id.text1);
@@ -75,6 +90,10 @@ public class MainActivity extends Activity implements ActionBar.OnNavigationList
                 GoogleAccountCredential.usingOAuth2(this, Collections.singleton(TasksScopes.TASKS));
         SharedPreferences settings = getPreferences(Context.MODE_PRIVATE);
         mCredential.setSelectedAccountName(settings.getString(PREF_ACCOUNT_NAME, null));
+
+        mService =
+                new com.google.api.services.tasks.Tasks.Builder(httpTransport, jsonFactory, mCredential)
+                        .setApplicationName("done").build();
     }
 
     @Override
@@ -156,10 +175,37 @@ public class MainActivity extends Activity implements ActionBar.OnNavigationList
 
     private void loadTaskList()
     {
-        mTaskListAdapter.addAll(new String[]{
-                "Task list 1",
-                "Task list 2",
-                "Task list 3"});
+        new AsyncTask<Void, Void, TaskLists>()
+        {
+            @Override
+            protected TaskLists doInBackground(Void... voids) {
+                TaskLists taskLists = null;
+                try {
+                    taskLists = mService.tasklists().list().execute();
+                } catch (UserRecoverableAuthIOException e) {
+                    startActivityForResult(e.getIntent(), REQUEST_AUTHORIZATION);
+                } catch (IOException e) {
+                    final String message = e.getLocalizedMessage();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+                }
+                return taskLists;
+            }
+
+            @Override
+            protected void onPostExecute(TaskLists taskLists) {
+                super.onPostExecute(taskLists);
+                mTaskListAdapter.clear();
+                if(taskLists != null) {
+                    mTaskListAdapter.addAll(taskLists.getItems());
+                }
+            }
+        }.execute();
     }
 
     @Override
@@ -221,8 +267,9 @@ public class MainActivity extends Activity implements ActionBar.OnNavigationList
     public boolean onNavigationItemSelected(int position, long id) {
         // When the given dropdown item is selected, show its contents in the
         // container view.
+        TaskList taskList = mTaskListAdapter.getItem(position);
         getFragmentManager().beginTransaction()
-                .replace(R.id.container, TasksFragment.newInstance(mCredential, position + 1))
+                .replace(R.id.container, TasksFragment.newInstance(taskList, mService))
                 .commit();
         return true;
     }
