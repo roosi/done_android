@@ -30,12 +30,8 @@ public class TaskFragment extends BaseFragment {
     private View mButtonDone;
     private EditText mEditTextTitle;
 
-    private com.google.api.services.tasks.Tasks mService;
-
-    public TaskFragment(String title, com.google.api.services.tasks.Tasks service) {
+    public TaskFragment(String title) {
         mTitle = title;
-
-        mService = service;
     }
 
     @Override

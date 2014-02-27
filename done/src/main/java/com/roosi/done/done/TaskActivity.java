@@ -42,7 +42,7 @@ public class TaskActivity extends Activity implements
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new TaskFragment(title, null))
+                    .add(R.id.container, new TaskFragment(title))
                     .commit();
         }
     }

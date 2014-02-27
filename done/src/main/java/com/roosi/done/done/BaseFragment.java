@@ -19,6 +19,7 @@ public class BaseFragment extends Fragment {
 
     private OnLoadingListener mListener;
     private OnErrorLister mErrorListener;
+    protected com.google.api.services.tasks.Tasks mService;
 
     @Override
     public void onAttach(Activity activity) {
@@ -30,6 +31,7 @@ public class BaseFragment extends Fragment {
         catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnLoadingListener");
         }
+        mService = getService();
     }
 
     protected void onLoadingStarted() {
@@ -48,5 +50,13 @@ public class BaseFragment extends Fragment {
                 mErrorListener.onError(e);
             }
         });
+    }
+
+    protected DoneApplication getApplication() {
+        return (DoneApplication)getActivity().getApplication();
+    }
+
+    protected com.google.api.services.tasks.Tasks getService() {
+        return getApplication().getService();
     }
 }

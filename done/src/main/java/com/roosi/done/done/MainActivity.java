@@ -98,6 +98,8 @@ public class MainActivity extends Activity implements ActionBar.OnNavigationList
                 new com.google.api.services.tasks.Tasks.Builder(httpTransport, jsonFactory, mCredential)
                         .setApplicationName("done").build();
 
+        ((DoneApplication)getApplication()).setService(mService);
+
         mProgressBar = findViewById(R.id.progressBar);
     }
 
@@ -277,7 +279,7 @@ public class MainActivity extends Activity implements ActionBar.OnNavigationList
         // container view.
         TaskList taskList = mTaskListAdapter.getItem(position);
         getFragmentManager().beginTransaction()
-                .replace(R.id.container, TasksFragment.newInstance(taskList, mService))
+                .replace(R.id.container, TasksFragment.newInstance(taskList))
                 .commit();
         return true;
     }

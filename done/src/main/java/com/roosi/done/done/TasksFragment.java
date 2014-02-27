@@ -36,8 +36,8 @@ import java.util.TimerTask;
 
 public class TasksFragment extends BaseFragment {
 
-    public static TasksFragment newInstance(TaskList taskList, com.google.api.services.tasks.Tasks service) {
-        TasksFragment fragment = new TasksFragment(taskList, service);
+    public static TasksFragment newInstance(TaskList taskList) {
+        TasksFragment fragment = new TasksFragment(taskList);
         return fragment;
     }
 
@@ -45,11 +45,8 @@ public class TasksFragment extends BaseFragment {
     private AbsListView taskListView;
     private TaskList mTaskList;
 
-    private com.google.api.services.tasks.Tasks mService;
-
-    public TasksFragment(TaskList taskList, com.google.api.services.tasks.Tasks service) {
+    public TasksFragment(TaskList taskList) {
         mTaskList = taskList;
-        mService = service;
     }
 
     @Override
