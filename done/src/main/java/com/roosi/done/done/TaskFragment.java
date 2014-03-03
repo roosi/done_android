@@ -93,7 +93,8 @@ public class TaskFragment extends BaseFragment {
             public void onClick(View view) {
                 Task task = getSelectedTask();
                 task.setStatus(StatusCompleted);
-                setStatusColor(null);
+                //setStatusColor(null);
+                getActivity().finish();
             }
         });
 
@@ -132,6 +133,7 @@ public class TaskFragment extends BaseFragment {
                         setStatusColor(date.getTime());
                     }
                 });
+        mButtonDate.setText(UiFormat.format(dueDate));
 
         mEditTextNotes.setText(task.getNotes());
 
