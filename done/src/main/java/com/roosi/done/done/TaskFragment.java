@@ -24,12 +24,17 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class TaskFragment extends BaseFragment {
 
     final DateFormat UiFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
     final SimpleDateFormat Rfc3339Format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
+    final private String StatusNeedsAction = "needsAction";
+    final private String StatusCompleted = "completed";
 
     private String mTitle;
     private DatePicker mDatePicker;
@@ -99,7 +104,17 @@ public class TaskFragment extends BaseFragment {
                 new DatePicker.OnDateChangedListener() {
                     @Override
                     public void onDateChanged(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
-                        mButtonDate.setText(UiFormat.format(new Date(year, monthOfYear, dayOfMonth)));
+
+                        Calendar date = Calendar.getInstance();
+                        date.set(year, monthOfYear, dayOfMonth);
+
+                        mButtonDate.setText(UiFormat.format(date.getTime()));
+
+                        DateTime newDue = new DateTime(Rfc3339Format.format(date.getTime()));
+
+                        Task task = getSelectedTask();
+                        task.setDue(newDue);
+                        setStatusColor(date.getTime());
                     }
                 });
 
@@ -112,8 +127,9 @@ public class TaskFragment extends BaseFragment {
 
         Task task = getSelectedTask();
 
+        Date dueDate = null;
         try {
-            Date dueDate = Rfc3339Format.parse(task.getDue().toStringRfc3339());
+            dueDate = Rfc3339Format.parse(task.getDue().toStringRfc3339());
 
             Calendar c = Calendar.getInstance();
             c.setTime(dueDate);
@@ -124,5 +140,46 @@ public class TaskFragment extends BaseFragment {
 
         mEditTextNotes.setText(task.getNotes());
 
+        setStatusColor(dueDate);
+
     }
+
+    private void setStatusColor(Date dueDate) {
+        int color = R.color.status_new;
+
+        Calendar c = new GregorianCalendar();
+        c.set(Calendar.HOUR_OF_DAY, 0); //anything 0 - 23
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        Date today = c.getTime();
+        c.add(Calendar.DATE, 1);
+        Date tomorrow = c.getTime();
+
+        Task task = getSelectedTask();
+
+        if (task.getStatus().equals(StatusNeedsAction))
+        {
+            if (dueDate.before(today))
+            {
+                color = R.color.status_due;
+            }
+            else if (dueDate.before(tomorrow))
+            {
+                color = R.color.status_due_closing;
+            }
+            else
+            {
+                color = R.color.status_needs_action;
+            }
+        }
+        else if (task.getStatus().equals(StatusCompleted))
+        {
+            color = R.color.status_completed;
+        }
+
+        final ActionBar actionBar = getActivity().getActionBar();
+        actionBar.setBackgroundDrawable(
+                new ColorDrawable(getResources().getColor(color)));
+    }
+
 }

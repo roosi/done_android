@@ -218,6 +218,7 @@ public class MainActivity extends Activity implements ActionBar.OnNavigationList
         }.execute();
     }
 
+    /*
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         // Restore the previously serialized current dropdown position.
@@ -233,6 +234,7 @@ public class MainActivity extends Activity implements ActionBar.OnNavigationList
         outState.putInt(STATE_SELECTED_NAVIGATION_ITEM,
                 getActionBar().getSelectedNavigationIndex());
     }
+    */
 
 
     @Override

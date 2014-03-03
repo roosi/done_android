@@ -8,7 +8,8 @@
     <FrameLayout android:layout_column="0"
         android:layout_width="84dp"
         android:layout_height="84dp"
-        android:background="@drawable/status_needs_action">
+        android:id="@+id/statusTile"
+        android:background="@drawable/status_new">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
