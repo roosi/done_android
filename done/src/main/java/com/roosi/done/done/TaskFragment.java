@@ -107,8 +107,9 @@ public class TaskFragment extends BaseFragment {
         Task task = getSelectedTask();
 
         Calendar c = Calendar.getInstance();
+        Date dueDate = null;
         try {
-            Date dueDate = Rfc3339Format.parse(task.getDue().toStringRfc3339());
+            dueDate = Rfc3339Format.parse(task.getDue().toStringRfc3339());
             c.setTime(dueDate);
         } catch (java.text.ParseException e) {
             e.printStackTrace();
@@ -133,6 +134,8 @@ public class TaskFragment extends BaseFragment {
                 });
 
         mEditTextNotes.setText(task.getNotes());
+
+        setStatusColor(dueDate);
     }
 
     private void setStatusColor(Date dueDate) {
