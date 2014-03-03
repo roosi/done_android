@@ -91,14 +91,28 @@ public class TaskFragment extends BaseFragment {
         mButtonDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().getActionBar().setBackgroundDrawable(
-                        new ColorDrawable(getResources().getColor(R.color.status_completed)));
+                Task task = getSelectedTask();
+                task.setStatus(StatusCompleted);
+                setStatusColor(null);
             }
         });
 
-        Calendar c = Calendar.getInstance();
+        return rootView;
+    }
 
-        mButtonDate.setText(UiFormat.format(c.getTime()));
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Task task = getSelectedTask();
+
+        Calendar c = Calendar.getInstance();
+        try {
+            Date dueDate = Rfc3339Format.parse(task.getDue().toStringRfc3339());
+            c.setTime(dueDate);
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+        }
 
         mDatePicker.init(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE),
                 new DatePicker.OnDateChangedListener() {
@@ -118,30 +132,7 @@ public class TaskFragment extends BaseFragment {
                     }
                 });
 
-        return rootView;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        Task task = getSelectedTask();
-
-        Date dueDate = null;
-        try {
-            dueDate = Rfc3339Format.parse(task.getDue().toStringRfc3339());
-
-            Calendar c = Calendar.getInstance();
-            c.setTime(dueDate);
-            mDatePicker.updateDate(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
-        } catch (java.text.ParseException e) {
-            e.printStackTrace();
-        }
-
         mEditTextNotes.setText(task.getNotes());
-
-        setStatusColor(dueDate);
-
     }
 
     private void setStatusColor(Date dueDate) {
